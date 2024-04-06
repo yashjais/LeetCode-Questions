@@ -148,4 +148,5 @@ var sortColors = function (nums) {
 
 // console.log(sortColors([5, 4, 5, 5, 1, 1, 3]));
 // console.log(sortColors([2, 0]));
-console.log(sortColors([2, 2]));
+// console.log(sortColors([2, 2]));
+console.log(sortColors([1, 3, 4, 0, 0]));
