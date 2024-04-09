@@ -49,42 +49,133 @@
  * @param {number[][]} queries
  * @return {number[]}
  */
+
+/**
+ * @param {string[]} nums
+ * @param {number[][]} queries
+ * @return {number[]}
+ */
 // js sort implementation
-var smallestTrimmedNumbers = function (nums, queries) {
-  const queriesLen = queries.length;
-  const numsLen = nums.length;
-  const nLen = nums[0].length;
-  console.log(nLen);
+// var smallestTrimmedNumbers = function(nums, queries) {
+//     const queriesLen = queries.length;
+//     const numsLen = nums.length;
+//     const nLen = nums[0].length;
+//     console.log(nLen)
 
-  const returnResult = [];
-  for (let i = 0; i < queriesLen; i += 1) {
-    const smallestNumVal = queries[i][0];
-    const trimNum = queries[i][1];
+//     const returnResult = [];
+//     for (let i = 0; i < queriesLen; i += 1) {
+//         const smallestNumVal = queries[i][0];
+//         const trimNum = queries[i][1];
 
-    const nums1 = [...nums].map((n) => n.substr(nLen - trimNum, nLen));
-    const sortedNums = [...nums1].sort((a, b) => a - b);
-    console.log("nums1", nums1);
-    console.log("sortedNums", sortedNums);
-    const smallestVal = sortedNums[smallestNumVal - 1];
-    console.log("smallestVal", smallestVal);
 
-    for (let j = numsLen - 1; j >= 0; j -= 1) {
-      if (smallestVal === nums1[j]) {
-        returnResult.push(j);
-        break;
-      }
+//         const nums1 = [...nums].map(n => n.substr((nLen - trimNum), nLen))
+//         const sortedNums = [...nums1].sort((a, b) => a - b);
+//         console.log('nums1', nums1)
+//         console.log('sortedNums', sortedNums)
+//         const smallestVal = sortedNums[smallestNumVal - 1];
+//         console.log('smallestVal', smallestVal);
+
+//         for (let j = numsLen - 1; j >= 0; j -= 1) {
+//             if (smallestVal === nums1[j]) {
+//                 returnResult.push(j);
+//                 break;
+//             }
+//         }
+//     }
+
+//     return returnResult;
+// };
+
+const countingSort = (arr, placeVal) => {
+    // Sorts an array of integers where minimum value is 0 and maximum value is NUM_DIGITS
+    const NUM_DIGITS = 10;
+    const counts = new Array(NUM_DIGITS).fill(0);
+    const arrLen = arr.length;
+
+    for (let i = 0; i < arrLen; i += 1) {
+        let current = Math.trunc(arr[i] / placeVal);
+        // console.log('current', current)
+        counts[current % NUM_DIGITS] += 1;
     }
-  }
+    // console.log('in counting sort', arr, placeVal, arrLen, counts)
 
-  return returnResult;
+    // we now overwrite our original counts with the starting index
+    // of each digit in our group of digits
+    let startingIndex = 0;
+    for (let i = 0; i < counts.length; i++) {
+        const count = counts[i];
+        counts[i] = startingIndex;
+        startingIndex += count;
+    }
+    // console.log('in counting sort', counts)
+
+    let sortedArray = new Array(arrLen).fill(0);
+    for (let i = 0; i < arrLen; i++) {
+        const current = Math.trunc(arr[i] / placeVal);
+        // console.log(counts[current % NUM_DIGITS], current, current % NUM_DIGITS)
+        sortedArray[counts[current % NUM_DIGITS]] = arr[i];
+        // since we have placed an item in index counts[current % NUM_DIGITS],
+        // we need to increment counts[current % NUM_DIGITS] index by 1 so the
+        // next duplicate digit is placed in appropriate index
+        counts[current % NUM_DIGITS] += 1;
+    }
+    // sortedArray = sortedArray.filter((ele) => ele);
+    // console.log('sorted arr', sortedArray)
+
+
+    // common practice to copy over sorted list into original arr
+    // it's fine to just return the sortedArray at this point as well
+    for (let i = 0; i < arrLen; i++) {
+        arr[i] = sortedArray[i];
+    }
 };
 
-console.log(
-  smallestTrimmedNumbers(
-    ["24", "37", "96", "04"],
-    [
-      [2, 1],
-      [2, 2],
-    ],
-  ),
-);
+// radix sort
+var smallestTrimmedNumbers = function(nums, queries) {
+    const queriesLen = queries.length;
+    const numsLen = nums.length;
+    const nLen = nums[0].length;
+    // console.log(nLen)
+
+    const returnResult = [];
+    for (let i = 0; i < queriesLen; i += 1) {
+        const smallestNumVal = queries[i][0];
+        const trimNum = queries[i][1];
+
+
+        const nums1 = [...nums].map(n => n.substr((nLen - trimNum), nLen));
+        const sortedNums = [...nums1];
+
+        // sort the arr
+        let maxElem = Number.NEGATIVE_INFINITY
+        for (let j = 0; j < numsLen; j += 1) {
+            if (nums1[j] > maxElem) {
+                maxElem = nums1[j];
+            }
+        }
+
+        // console.log('maxElem', maxElem);
+        let placeVal = 1;
+        while ((maxElem / placeVal) > 1) {
+            console.log('in while', maxElem, placeVal, maxElem/placeVal, (maxElem / placeVal) > 0)
+            countingSort(sortedNums, placeVal);
+            placeVal *= 10;
+        }
+
+        // console.log('nums1', nums1)
+        // console.log('sortedNums', sortedNums)
+        const smallestVal = sortedNums[smallestNumVal - 1];
+        // console.log('smallestVal', smallestVal);
+
+        for (let j = numsLen - 1; j >= 0; j -= 1) {
+            if (smallestVal === nums1[j]) {
+                returnResult.push(j);
+                break;
+            }
+        }
+    }
+
+    return returnResult;
+};
+
+console.log(smallestTrimmedNumbers(["24","37","96","04"], [[2,1],[2,2]]))
