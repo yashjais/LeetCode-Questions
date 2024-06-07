@@ -25,19 +25,52 @@
  * @param {number} target
  * @return {number}
  */
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
 // O(n)
-var search = function (nums, target) {
+// var search = function(nums, target) {
+//     let numsLen = nums.length;
+//     let i = 0;
+
+//     while (i < numsLen) {
+//         if (nums[i] === target) {
+//             return i;
+//         }
+//         i += 1;
+//     }
+
+//     return -1;
+// };
+
+// O(log n)
+var search = function(nums, target) {
     let numsLen = nums.length;
-    let i = 0;
+    let startPoint = 0;
+    let endPoint = numsLen - 1;
 
-    while (i < numsLen) {
-        if (nums[i] === target) {
-            return i;
+    const recursive = (startPoint, endPoint) => {
+        let index = Math.floor((startPoint + endPoint)/2);
+
+        if (endPoint - startPoint === 1 || endPoint === startPoint) {
+            if (nums[endPoint] === target) return endPoint;
+            if (nums[startPoint] === target) return startPoint;
+            return -1
         }
-        i += 1;
-    }
 
-    return -1;
+
+        if (nums[index] === target) return index;
+        if (nums[index] > target) {
+            return recursive(startPoint, index)
+        }
+        if (nums[index] < target) {
+            return recursive(index, endPoint)
+        }
+    };
+
+    return recursive(startPoint, endPoint);
 };
 
 console.log(search([4, 5, 6, 7, 0, 1, 2], 0));
