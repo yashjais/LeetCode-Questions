@@ -117,33 +117,48 @@
 // }
 
 // JS Counting Sort
-var sortColors = function (nums) {
-  const numsLength = nums.length;
+// var sortColors = function (nums) {
+//   const numsLength = nums.length;
 
-  const counts = new Array(numsLength + 1).fill(0);
-  for (let i = 0; i < numsLength; i += 1) {
-    counts[nums[i]] += 1;
-  }
-  console.log(counts);
+//   const counts = new Array(numsLength + 1).fill(0);
+//   for (let i = 0; i < numsLength; i += 1) {
+//     counts[nums[i]] += 1;
+//   }
+//   console.log(counts);
 
-  let startingIndex = 0;
-  for (let i = 0; i < numsLength + 1; i += 1) {
-    let count = counts[i];
-    counts[i] = startingIndex;
-    startingIndex += count;
-  }
-  console.log(counts);
+//   let startingIndex = 0;
+//   for (let i = 0; i < numsLength + 1; i += 1) {
+//     let count = counts[i];
+//     counts[i] = startingIndex;
+//     startingIndex += count;
+//   }
+//   console.log(counts);
 
-  const copiedArr = [...nums];
-  for (let i = 0; i < numsLength; i += 1) {
-    const num = copiedArr[i];
-    console.log("num", num);
-    const index = counts[num];
-    console.log("index", index);
-    nums[index] = num;
-    counts[num] += 1;
-  }
-  console.log(nums);
+//   const copiedArr = [...nums];
+//   for (let i = 0; i < numsLength; i += 1) {
+//     const num = copiedArr[i];
+//     console.log("num", num);
+//     const index = counts[num];
+//     console.log("index", index);
+//     nums[index] = num;
+//     counts[num] += 1;
+//   }
+//   console.log(nums);
+// };
+
+// more optimized solu
+var sortColors = function(nums) {
+    const numsLen = nums.length;
+    let isSorted = false;
+    while(!isSorted){
+        isSorted = true;
+        for(let i = 0; i < numsLen - 1; i++){
+            if(nums[i] > nums[i + 1]){
+                isSorted = false;
+                [nums[i], nums[i + 1]] = [nums[i + 1], nums[i]];
+            }
+        }
+    }
 };
 
 // console.log(sortColors([5, 4, 5, 5, 1, 1, 3]));
