@@ -84,10 +84,57 @@
 //  */
 
 
-// more opt solution with map
+// // more opt solution with map
+// var RandomizedSet = function() {
+//     this.map = new Map()
+//     this.list = []
+// };
+
+// /** 
+//  * @param {number} val
+//  * @return {boolean}
+//  */
+// RandomizedSet.prototype.insert = function(val) {
+//     if(this.map.has(val)) return false
+//     this.list.push(val)
+//     this.map.set(val, this.list.length - 1)
+//     return true
+// };
+
+// /** 
+//  * @param {number} val
+//  * @return {boolean}
+//  */
+// RandomizedSet.prototype.remove = function(val) {
+//       if (!this.map.has(val)) return false;
+
+//     const idxToRemove = this.map.get(val);
+//     const lastElement = this.list[this.list.length - 1];
+
+//     // Swap the last element with the one to remove
+//     this.list[idxToRemove] = lastElement;
+//     this.map.set(lastElement, idxToRemove);
+
+//     // Remove the last element (now moved to idxToRemove)
+//     this.list.pop();
+//     this.map.delete(val);
+
+//     return true;
+// };
+
+// /**
+//  * @return {number}
+//  */
+// RandomizedSet.prototype.getRandom = function() {
+//     const randomIndex = Math.floor(Math.random() * this.list.length);
+//     return this.list[randomIndex];
+// };
+
+
+// more opt solution with set
 var RandomizedSet = function() {
-    this.map = new Map()
-    this.list = []
+    this.set = new Set();
+    this.list = [];
 };
 
 /** 
@@ -95,10 +142,10 @@ var RandomizedSet = function() {
  * @return {boolean}
  */
 RandomizedSet.prototype.insert = function(val) {
-    if(this.map.has(val)) return false
-    this.list.push(val)
-    this.map.set(val, this.list.length - 1)
-    return true
+    if(this.set.has(val)) return false;
+    this.set.add(val);
+    this.list.push(val);
+    return true;
 };
 
 /** 
@@ -106,18 +153,10 @@ RandomizedSet.prototype.insert = function(val) {
  * @return {boolean}
  */
 RandomizedSet.prototype.remove = function(val) {
-      if (!this.map.has(val)) return false;
+    if (!this.set.has(val)) return false;
 
-    const idxToRemove = this.map.get(val);
-    const lastElement = this.list[this.list.length - 1];
-
-    // Swap the last element with the one to remove
-    this.list[idxToRemove] = lastElement;
-    this.map.set(lastElement, idxToRemove);
-
-    // Remove the last element (now moved to idxToRemove)
-    this.list.pop();
-    this.map.delete(val);
+    this.set.delete(val);
+    this.list = this.list.filter((ele) => ele !== val);
 
     return true;
 };
@@ -126,6 +165,15 @@ RandomizedSet.prototype.remove = function(val) {
  * @return {number}
  */
 RandomizedSet.prototype.getRandom = function() {
-    const randomIndex = Math.floor(Math.random() * this.list.length);
-    return this.list[randomIndex];
+    const randomIndex = Math.floor(Math.random() * this.set.size);
+    let item;
+
+    for (let i = 0; i < this.set.size; i += 1) {
+        if (i === randomIndex) {
+            item = this.list[i];
+            break;
+        }
+    }
+
+    return item;
 };
